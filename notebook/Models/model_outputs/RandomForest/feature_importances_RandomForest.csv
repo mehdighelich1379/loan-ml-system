@@ -1,0 +1,16 @@
+Feature,Importance
+term_int_rate,0.3232207524821699
+grade_rank,0.301824774480262
+purpose_term_interaction,0.14259631162860473
+fico_dti_interaction,0.03758338664383445
+fico_bin_num,0.03727901463649252
+installment_to_income,0.02905963364327055
+tot_cur_bal_group_num,0.026024331117593783
+installment_to_fico,0.020776936967457586
+fico_income_interaction,0.01882486739575193
+dti,0.018257680877840028
+tot_cur_bal_log,0.01653744609146838
+fico_balance_interaction,0.011745477922690109
+home_ownership_enc,0.007755734308673216
+balance_to_income,0.002492961778536051
+purpose_risk,0.0024780489680641363

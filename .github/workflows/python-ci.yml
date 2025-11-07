@@ -1,0 +1,86 @@
+# name: FastAPI CI - Python 3.11
+
+# on:
+#   push:
+#     branches: ["main"]
+#   pull_request:
+#     branches: ["main"]
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v4
+
+#       - name: Set up Python 3.11
+#         uses: actions/setup-python@v4
+#         with:
+#           python-version: "3.11"
+
+#       - name: Add PYTHONPATH for package imports
+#         run: echo "PYTHONPATH=$PWD" >> $GITHUB_ENV
+
+#       - name: Install dependencies
+#         run: |
+#           python -m pip install --upgrade pip
+#           pip install -r requirements.txt
+
+#       - name: Install test dependencies
+#         run: |
+#           pip install pytest pytest-cov httpx flake8
+
+#       - name: Lint with flake8
+#         run: |
+#           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics || true
+
+#       - name: Run unit tests
+#         run: |
+#           if [ -d "tests" ]; then pytest -q; else echo "No tests directory"; fi
+
+#       - name: FastAPI Syntax Check
+#         run: |
+#           python -m compileall app || exit 1
+
+#       - name: Test FastAPI startup
+#         run: |
+#           uvicorn app.main:app --host 0.0.0.0 --port 8000 &
+#           sleep 5
+#           curl -f http://127.0.0.1:8000/health || (echo "API Failed to start" && exit 1)
+#           echo "API started successfully"
+
+#       - name: Build Docker image
+#         run: docker build -t loan-app .
+
+#       - name: Stop old container if exists
+#         run: docker stop loan-app-test || true
+
+#       - name: Remove old container if exists
+#         run: docker rm loan-app-test || true
+
+#       - name: Run Docker container test
+#         run: |
+#           docker run -d -p 8010:8000 --name loan-app-test loan-app
+#           sleep 5
+#           curl -f http://127.0.0.1:8010/health || (echo "❌ Docker container failed" && exit 1)
+#           echo "Docker container started successfully"
+
+#       - name: Cleanup Docker
+#         if: always()
+#         run: |
+#           docker stop loan-app-test || true
+#           docker rm loan-app-test || true
+
+#       #  Deploy to Railway
+#       - name: Install Railway CLI
+#         run: npm install -g @railway/cli
+
+#       - name: Deploy to Railway
+#         env:
+#           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+#         run: railway up --detach --service LoanIQ
+
+
+
+

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="fa">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>💰 پیش‌بینی ریسک وام</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background: url('/static/loan.jpg') center/cover no-repeat fixed;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 40px;
+            min-height: 100vh;
+            font-family: sans-serif;
+            direction: rtl;
+        }
+
+        .glass-box {
+            width: 95%;
+            max-width: 1100px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 30px;
+            border-radius: 22px;
+        }
+
+        .form-input {
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            border-radius: 10px;
+            font-weight: 600;
+            padding: 8px;
+            width: 100%;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: bold;
+            color: #000;
+        }
+
+        #result {
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: flex-start;
+            white-space: pre-line;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="glass-box">
+        <h2 class="text-2xl font-bold text-center mb-4">💰 پیش‌بینی ریسک وام</h2>
+
+        <form id="loanForm" class="grid grid-cols-2 gap-4">
+            <label>💰 مبلغ وام (loan_amnt) - تومان
+                <input type="text" name="loan_amnt" value="200000000" class="form-input" required>
+            </label>
+
+            <label>⏳ مدت وام (term)
+                <select name="term" class="form-input" required>
+                    <option value="36 months">36 ماه</option>
+                    <option value="60 months">60 ماه</option>
+                </select>
+            </label>
+
+            <label>📈 نرخ بهره (int_rate)
+                <input type="number" name="int_rate" value="18" class="form-input" step="0.1" required>
+            </label>
+
+            <label>💳 مبلغ قسط (installment) - تومان
+                <input type="number" name="installment" value="5000000" class="form-input" step="10" required>
+            </label>
+
+            <label>🏷 رتبه (grade)
+                <select name="grade" class="form-input" required>
+                    <option>A</option>
+                    <option>B</option>
+                    <option>C</option>
+                    <option>D</option>
+                    <option>E</option>
+                    <option>F</option>
+                    <option>G</option>
+                </select>
+            </label>
+
+            <label>📊 زیررتبه (sub_grade)
+                <select name="sub_grade" class="form-input" required>
+                    <option>A1</option>
+                    <option>A2</option>
+                    <option>A3</option>
+                    <option>A4</option>
+                    <option>A5</option>
+                    <option>B1</option>
+                    <option>B2</option>
+                    <option>B3</option>
+                    <option>B4</option>
+                    <option>B5</option>
+                    <option>C1</option>
+                    <option>C2</option>
+                    <option>C3</option>
+                    <option>C4</option>
+                    <option>C5</option>
+                    <option>D1</option>
+                    <option>D2</option>
+                    <option>D3</option>
+                    <option>D4</option>
+                    <option>D5</option>
+                    <option>E1</option>
+                    <option>E2</option>
+                    <option>E3</option>
+                    <option>E4</option>
+                    <option>E5</option>
+                    <option>F1</option>
+                    <option>F2</option>
+                    <option>F3</option>
+                    <option>F4</option>
+                    <option>F5</option>
+                    <option>G1</option>
+                    <option>G2</option>
+                    <option>G3</option>
+                    <option>G4</option>
+                    <option>G5</option>
+                </select>
+            </label>
+
+            <label>🏠 مالکیت خانه (home_ownership)
+                <select name="home_ownership" class="form-input" required>
+                    <option value="MORTGAGE">وام‌مسکن / رهن (MORTGAGE)</option>
+                    <option value="RENT">اجاره (RENT)</option>
+                    <option value="OWN">مالک (OWN)</option>
+                    <option value="OTHER">سایر (OTHER)</option>
+
+                </select>
+            </label>
+
+            <label>🎯 هدف وام (purpose)
+                <select name="purpose" class="form-input" required>
+                    <option value="credit_card">تسویه کارت اعتباری</option>
+                    <option value="debt_consolidation">تجمیع بدهی</option>
+                    <option value="home_improvement">بهسازی منزل</option>
+                    <option value="car">خودرو</option>
+                    <option value="major_purchase">خرید عمده</option>
+                    <option value="moving">جابجایی/اسباب‌کشی</option>
+                    <option value="medical">درمانی/پزشکی</option>
+                    <option value="vacation">سفر/تعطیلات</option>
+                    <option value="wedding">عروسی</option>
+                    <option value="small_business">کسب‌وکار خرد</option>
+                    <option value="house">خانه</option>
+                    <option value="educational">آموزشی</option>
+                    <option value="other">سایر</option>
+                </select>
+
+            </label>
+
+            <label>💵 درآمد سالانه (annual_inc) - تومان
+                <input type="number" name="annual_inc" value="600000000" class="form-input" step="1000" required>
+            </label>
+
+            <label>📉 نسبت بدهی به درآمد (dti)
+                <input type="number" name="dti" value="8" class="form-input" step="0.1" required>
+            </label>
+
+            <label>📂 تعداد حساب‌های باز (open_acc)
+                <input type="number" name="open_acc" value="12" class="form-input" required>
+            </label>
+
+            <label>💳 مانده حساب چرخشی (revol_bal) - تومان
+                <input type="number" name="revol_bal" value="4000000" class="form-input" required>
+            </label>
+
+            <label>📈 درصد استفاده از اعتبار (revol_util)
+                <input type="number" name="revol_util" value="15" class="form-input" required>
+            </label>
+
+            <label>🏦 موجودی کل حساب‌ها (tot_cur_bal) - تومان
+                <input type="number" name="tot_cur_bal" value="700000000" class="form-input" required>
+            </label>
+
+            <label>⭐️ امتیاز FICO (fico_score)
+                <input type="number" name="fico_score" value="650" class="form-input" min="650" max="850" required>
+            </label>
+        </form>
+
+        <button id="predictBtn"
+            class="w-full bg-red-600 hover:bg-red-700 text-white my-4 py-2 rounded text-lg font-bold">
+            ⚡️ پیش‌بینی / Predict
+        </button>
+
+        <div id="result" class="hidden p-4 rounded-xl font-bold text-sm leading-relaxed"></div>
+        <canvas id="chart" class="mt-4"></canvas>
+    </div>
+    <script>
+        const API = window.location.origin;
+
+        const form = document.getElementById("loanForm");
+
+        // FICO clamp
+        const ficoInput = form.querySelector("input[name='fico_score']");
+        ficoInput.addEventListener("blur", () => {
+            let v = parseInt(ficoInput.value || 0, 10);
+            if (v < 650) ficoInput.value = 650;
+            if (v > 850) ficoInput.value = 850;
+        });
+
+        // Grade/Subgrade sync
+        const gradeSelect = form.querySelector("select[name='grade']");
+        const subGradeSelect = form.querySelector("select[name='sub_grade']");
+        const subGradeOptions = Array.from(subGradeSelect.querySelectorAll("option"));
+        function syncSubgrades() {
+            const g = gradeSelect.value;
+            subGradeSelect.innerHTML = "";
+            subGradeOptions.forEach(o => { if (o.value.startsWith(g)) subGradeSelect.appendChild(o); });
+            subGradeSelect.selectedIndex = 0;
+        }
+        gradeSelect.addEventListener("change", syncSubgrades);
+        syncSubgrades();
+
+
+        const moneyFields = ["loan_amnt", "installment", "annual_inc", "revol_bal", "tot_cur_bal"];
+        moneyFields.forEach(name => {
+            const input = form.querySelector(`input[name='${name}']`);
+            if (!input) return;
+
+            input.type = "text";
+            input.setAttribute("inputmode", "decimal");
+
+            input.addEventListener("input", (e) => {
+                const raw = e.target.value.replace(/,/g, "").replace(/[^\d.]/g, "");
+                if (raw === "") { e.target.value = ""; return; }
+
+                const parts = raw.split(".");
+                parts[0] = String(parseInt(parts[0] || "0", 10)).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                e.target.value = parts.length > 1 ? parts[0] + "." + parts[1] : parts[0];
+            });
+
+
+            input.addEventListener("blur", (e) => {
+                e.target.value = e.target.value.replace(/,/g, "");
+            });
+        });
+
+        function toNumber(val) {
+            return Number(String(val ?? "").replace(/,/g, ""));
+        }
+
+        let chart;
+
+        document.getElementById("predictBtn").onclick = async () => {
+
+            const result = document.getElementById("result");
+            result.classList.remove("hidden");
+            result.replaceChildren();
+
+
+            const data = Object.fromEntries(new FormData(form).entries());
+
+
+            moneyFields.forEach(f => data[f] = toNumber(data[f]));
+            ["int_rate", "dti", "revol_util", "open_acc", "fico_score"].forEach(k => {
+                if (k in data) data[k] = Number(String(data[k]).replace(/,/g, ""));
+            });
+
+
+            let explainRes;
+            try {
+                const res = await fetch(`${API}/explain`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data)
+                });
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                explainRes = await res.json();
+            } catch (err) {
+                result.textContent = "خطا در ارتباط با API: " + err.message + " (CORS یا آدرس سرور را چک کن)";
+                return;
+            }
+
+
+            const prob = Number(explainRes.default_probability ?? 0);
+            const shap = explainRes.shap_summary ?? [];
+            const explanation = explainRes.explanation ?? "";
+
+
+            result.style.background = prob >= 0.7 ? "#ffb3b3" : prob >= 0.3 ? "#fff2b0" : "#c6ffc8";
+            result.insertAdjacentHTML("beforeend", `<div style="white-space: pre-line;">${explanation}</div>`);
+
+
+            const shapTable = document.createElement("table");
+            shapTable.innerHTML = "<tr><th>ویژگی</th><th>مقدار</th><th>SHAP</th></tr>" +
+                shap.map(r => `<tr><td>${r.feature}</td><td>${r.feature_value}</td><td>${(+r.shap_value).toFixed(4)}</td></tr>`).join("");
+            result.appendChild(shapTable);
+
+
+            if (chart) chart.destroy();
+            chart = new Chart(document.getElementById("chart"), {
+                type: "bar",
+                data: {
+                    labels: shap.map(f => f.feature),
+                    datasets: [{
+                        label: "SHAP Value",
+                        data: shap.map(f => f.shap_value),
+                        backgroundColor: shap.map(f => f.shap_value > 0 ? "rgba(255, 99, 132, 0.6)" : "rgba(75, 192, 75, 0.6)")
+                    }]
+                }
+            });
+        };
+    </script>

@@ -1,0 +1,2 @@
+n_estimators,learning_rate,num_leaves,max_depth,min_child_samples,subsample,colsample_bytree,reg_alpha,reg_lambda
+600,0.09691327760294387,27,4,36,0.8124689051264062,0.8018857104380808,0.11865195715356525,0.4954142293448982

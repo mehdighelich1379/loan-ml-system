@@ -1,0 +1,44 @@
+{
+    "samples": [
+        {
+            "name": "sample_1_good_customer",
+            "data": {
+                "loan_amnt": 200000000,
+                "term": "36 months",
+                "int_rate": 18,
+                "installment": 5000000,
+                "grade": "A",
+                "sub_grade": "A1",
+                "home_ownership": "MORTGAGE",
+                "annual_inc": 600000000,
+                "purpose": "credit_card",
+                "dti": 8,
+                "open_acc": 12,
+                "revol_bal": 4000000,
+                "revol_util": 15,
+                "tot_cur_bal": 700000000,
+                "fico_score": 650
+            }
+        },
+        {
+            "name": "sample_2_high_risk_customer",
+            "data": {
+                "loan_amnt": 300000000,
+                "term": "60 months",
+                "int_rate": 22,
+                "installment": 6100000,
+                "grade": "D",
+                "sub_grade": "D5",
+                "home_ownership": "RENT",
+                "annual_inc": 100000000,
+                "purpose": "car",
+                "dti": 28,
+                "open_acc": 4,
+                "revol_bal": 5000000,
+                "revol_util": 70,
+                "tot_cur_bal": 40000000,
+                "fico_score": 700
+            }
+        }
+    ]
+}

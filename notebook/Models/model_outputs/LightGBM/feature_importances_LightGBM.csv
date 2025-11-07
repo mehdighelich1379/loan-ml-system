@@ -1,0 +1,16 @@
+Feature,Importance
+tot_cur_bal_log,1153
+term_int_rate,893
+installment_to_fico,840
+revol_util_to_fico,736
+installment_to_income,652
+fico_income_interaction,627
+fico_dti_interaction,615
+balance_to_income,500
+dti,397
+grade_rank,395
+fico_balance_interaction,375
+purpose_term_interaction,371
+fico_bin_num,335
+open_acc_group_num,210
+tot_cur_bal_group_num,199

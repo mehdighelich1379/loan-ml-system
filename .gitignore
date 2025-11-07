@@ -1,0 +1,8 @@
+*.csv.gz
+*.zip
+__pycache__/
+.vscode/
+.ipynb_checkpoints/
+catboost_info/
+mlruns/
+test.ipynb
